@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- 清单型封面：可列条目的选题（5 个设置 / 3 个坑）。items 由 render_cover.py 生成 -->
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1242px;height:1656px;font-family:"Noto Sans SC",sans-serif;background:#12100E;color:#F5F1E8;overflow:hidden}
+  .pad{padding:110px 96px;height:100%;display:flex;flex-direction:column}
+  .tag{display:inline-block;font-size:38px;font-weight:500;color:#B9AE99;letter-spacing:2px;border:3px solid #3A342B;border-radius:999px;padding:14px 34px;align-self:flex-start}
+  .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:38px}
+  .h{font-size:108px;font-weight:900;line-height:1.2;letter-spacing:-2px;word-break:break-word}
+  .h em{font-style:normal;color:#F0B429}
+  .list{display:flex;flex-direction:column;gap:26px;margin-top:10px}
+  .item{display:flex;gap:28px;align-items:baseline;font-size:50px;font-weight:500;color:#DDD4C4}
+  .num{font-size:38px;font-weight:900;color:#F0B429;font-variant-numeric:tabular-nums;min-width:64px}
+  .foot{font-size:40px;color:#7A7161;border-top:3px solid #3A342B;padding-top:34px;display:flex;justify-content:space-between}
+</style></head><body><div class="pad">
+  <div class="tag">{{tag}}</div>
+  <div class="mid">
+    <div class="h" style="font-size:{{title_size}}px;line-height:{{title_lh}}">{{title_html}}</div>
+    <div class="list" style="gap:{{item_gap}}px">
+{{items}}
+    </div>
+  </div>
+  <div class="foot"><span>{{foot_left}}</span><span>{{foot_right}}</span></div>
+</div></body></html>

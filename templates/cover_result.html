@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- 结果型封面：数字型选题（省了 X 小时 / 从 60% 到 95%）。占位符由 render_cover.py 填充 -->
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1242px;height:1656px;font-family:"Noto Sans SC",sans-serif;background:#FBF9F4;color:#12100E;overflow:hidden}
+  .pad{padding:110px 96px;height:100%;display:flex;flex-direction:column}
+  .tag{display:inline-block;font-size:38px;font-weight:500;color:#8A7F6E;letter-spacing:2px;border:3px solid #E3DCCF;border-radius:999px;padding:14px 34px;align-self:flex-start}
+  .mid{flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px}
+  .h{font-size:104px;font-weight:900;line-height:1.24;letter-spacing:-2px;word-break:break-word}
+  .big{font-size:196px;font-weight:900;line-height:1;letter-spacing:-6px;color:#E8452B;word-break:break-word}
+  .sub{font-size:54px;font-weight:500;color:#4A4238;line-height:1.5}
+  .foot{font-size:40px;color:#9A8F7E;border-top:3px solid #E3DCCF;padding-top:34px;display:flex;justify-content:space-between}
+</style></head><body><div class="pad">
+  <div class="tag">{{tag}}</div>
+  <div class="mid">
+    <div class="h" style="font-size:{{title_size}}px;line-height:{{title_lh}}">{{title_html}}</div>
+    <div class="big" style="font-size:{{big_size}}px">{{big}}</div>
+    <div class="sub" style="font-size:{{sub_size}}px">{{sub}}</div>
+  </div>
+  <div class="foot"><span>{{foot_left}}</span><span>{{foot_right}}</span></div>
+</div></body></html>
