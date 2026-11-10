@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>内容管理 · 小红书预览</title>
+<style>
+:root{--red:#FF2442;--ink:#222;--muted:#888;--line:#EDEDED;--bg:#FAFAFA;--card:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Noto Sans SC","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* 顶栏 */
+.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
+.top-in{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:18px}
+.logo{width:34px;height:34px;border-radius:10px;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:800;font-size:15px}
+.brand{font-weight:800;font-size:17px;letter-spacing:.3px}
+.brand small{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-top:2px}
+.search{margin-left:auto;flex:0 0 260px;display:flex;align-items:center;gap:8px;background:#F5F5F5;border-radius:999px;padding:9px 16px}
+.search input{border:0;background:transparent;outline:0;width:100%;font-size:14px;color:var(--ink)}
+.tabs{max-width:1180px;margin:0 auto;padding:12px 24px 0;display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;color:#555;cursor:pointer;transition:.15s}
+.chip:hover{border-color:#D8D8D8}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip b{font-weight:600;margin-left:6px;opacity:.55}
+
+/* 信息条 */
+.stat{max-width:1180px;margin:0 auto;padding:14px 24px 6px;font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+.stat b{color:var(--ink)}
+
+/* 网格 */
+.grid{max-width:1180px;margin:0 auto;padding:10px 24px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:22px 16px}
+.card{background:var(--card);border-radius:12px;overflow:hidden;cursor:pointer;transition:.18s;border:1px solid #F2F2F2}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.thumb{position:relative;aspect-ratio:3/4;background:#F1EEE8;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ph{position:absolute;inset:0;padding:17px;display:flex;flex-direction:column;justify-content:space-between;color:#fff}
+.ph .k{font-size:10px;letter-spacing:1.5px;opacity:.9;font-weight:600}
+.ph .t{font-size:19px;font-weight:800;line-height:1.35;text-shadow:0 1px 6px rgba(0,0,0,.18)}
+.pill{display:inline-block;font-size:11px;padding:3px 9px;border-radius:999px;background:#F2F2F2;color:#666;font-weight:600}
+.pill.st-选题{background:#F2F2F2;color:#777}
+.pill.st-待写{background:#EAF1FF;color:#2E5BFF}
+.pill.st-待做图{background:#FFF3DF;color:#B26A00}
+.pill.st-待发{background:#FFF0F2;color:#D92B4B}
+.pill.st-已发{background:#E8F7EE;color:#0E8A4F}
+.pill.st-复盘{background:#F0EBFF;color:#6B46C1}
+.rowstat{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.typ{font-size:11px;color:#AAA}
+.score{position:absolute;right:10px;top:10px;background:#fff;color:var(--red);font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px}
+.cbody{padding:10px 12px 12px}
+.ctitle{font-size:14px;line-height:1.45;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+.cmeta{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:12px;color:var(--muted)}
+.dot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#FFB199,#FF2442)}
+.cmeta .name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.heart{display:flex;align-items:center;gap:3px}
+
+/* 详情弹层 */
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:50;align-items:center;justify-content:center;padding:24px}
+.mask.on{display:flex}
+.detail{background:#fff;border-radius:16px;width:min(980px,100%);max-height:88vh;overflow:hidden;display:grid;grid-template-columns:44% 56%}
+.dimg{background:#111;display:flex;align-items:center;justify-content:center;position:relative}
+.dimg img{width:100%;height:100%;object-fit:contain}
+.dimg .ph{position:absolute}
+.dinfo{padding:26px 28px;overflow:auto}
+.dauthor{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.dauthor .dot{width:34px;height:34px}
+.dauthor .nm{font-size:14px;font-weight:700}
+.dauthor .tm{font-size:11px;color:var(--muted)}
+.dtitle{font-size:20px;font-weight:800;line-height:1.4;margin-bottom:14px}
+.dbody{font-size:15px;line-height:1.85;white-space:pre-wrap;color:#333}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.tag{color:#13386B;font-size:13px}
+.dstats{display:flex;gap:22px;font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;margin-top:6px}
+.dmeta{margin-top:16px;display:grid;gap:8px;font-size:13px}
+.dmeta .r{display:flex;gap:10px;color:#666}
+.dmeta .r b{color:var(--ink);font-weight:600;min-width:64px}
+.close{position:absolute;right:18px;top:14px;background:rgba(255,255,255,.9);border:0;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:17px;color:#333}
+.copy{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;font-size:13px;cursor:pointer;margin-top:18px}
+.copy:hover{border-color:var(--red);color:var(--red)}
+.empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:80px 0;font-size:14px}
+@media(max-width:760px){.detail{grid-template-columns:1fr;max-height:92vh}.dimg{height:40vh}.search{display:none}}
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="top-in">
+    <div class="logo">书</div>
+    <div class="brand">内容管理台<small>小红书展示模拟 · 只读预览</small></div>
+    <div class="search"><span>🔍</span><input id="q" placeholder="搜索标题 / 正文"></div>
+  </div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="stat" id="stat"></div>
+<div class="grid" id="grid"></div>
+
+<div class="mask" id="mask">
+  <div class="detail" id="detail"></div>
+</div>
+
+<script>
+const STATUS_ORDER = ['全部','选题','待写','待做图','待发','已发','复盘'];
+const COLORS = [['#FF9A8B','#FF6A88'],['#A18CD1','#FBC2EB'],['#84FAB0','#8FD3F4'],['#FBC2EB','#A6C1EE'],['#FFD26F','#FF8E53'],['#B7C9E2','#7B8FA6']];
+let DATA=[], state='全部', kw='';
+
+fetch('data.json').then(r=>r.json()).then(d=>{DATA=d;renderTabs();render();});
+
+function renderTabs(){
+  const counts={}; DATA.forEach(i=>counts[i.status]=(counts[i.status]||0)+1);
+  document.getElementById('tabs').innerHTML = STATUS_ORDER.map(s=>{
+    const n = s==='全部'? DATA.length : (counts[s]||0);
+    return `<div class="chip ${s===state?'on':''}" data-s="${s}">${s}<b>${n}</b></div>`;
+  }).join('');
+  document.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{state=c.dataset.s;renderTabs();render();});
+}
+
+function render(){
+  const list = DATA.filter(i=> (state==='全部'||i.status===state) &&
+    (!kw || (i.title+i.body).toLowerCase().includes(kw.toLowerCase())));
+  const ready = DATA.filter(i=>i.material_ready).length;
+  document.getElementById('stat').innerHTML =
+    `<span>共 <b>${DATA.length}</b> 条</span><span>素材到位 <b>${ready}</b></span>`+
+    `<span>已发 <b>${DATA.filter(i=>i.status==='已发').length}</b></span>`+
+    `<span>当前筛选 <b>${list.length}</b></span>`;
+  document.getElementById('grid').innerHTML = list.length? list.map(card).join('') : '<div class="empty">没有匹配的内容</div>';
+  document.querySelectorAll('.card').forEach(el=>el.onclick=()=>open(el.dataset.id));
+}
+
+function card(i,idx){
+  const ph = i.cover ? `<img src="${i.cover}" alt="">` :
+    `<div class="ph" style="background:linear-gradient(135deg,${COLORS[idx%6][0]},${COLORS[idx%6][1]})">
+       <div class="k">${esc(i.type)}</div><div class="t">${esc(i.title)}</div>
+     </div>`;
+  return `<div class="card" data-id="${i.id}">
+    <div class="thumb">${ph}
+      ${i.score?`<span class="score">${i.score}分</span>`:''}
+    </div>
+    <div class="cbody">
+      <div class="rowstat"><span class="pill st-${esc(i.status)}">${esc(i.status)}</span><span class="typ">${esc(i.type)}</span></div>
+      <div class="ctitle">${esc(i.title)}</div>
+      <div class="cmeta"><span class="dot"></span><span class="name">羽乐</span>
+        <span class="heart">♡ ${i.likes||''}</span></div>
+    </div>
+  </div>`;
+}
+
+function open(id){
+  const i = DATA.find(x=>x.id===id); if(!i) return;
+  const bg = `linear-gradient(135deg,${COLORS[0][0]},${COLORS[0][1]})`;
+  const cover = i.cover ? `<img src="${i.cover}" alt="">` :
+    `<div class="ph" style="background:${bg}"><div class="k">${esc(i.type)}</div><div class="t">${esc(i.title)}</div></div>`;
+  document.getElementById('detail').innerHTML = `
+    <div class="dimg">${cover}<button class="close" onclick="closeD()">✕</button></div>
+    <div class="dinfo">
+      <div class="dauthor"><span class="dot"></span><div><div class="nm">羽乐</div>
+        <div class="tm">${i.plan? '计划发布 '+i.plan : '未排期'}</div></div></div>
+      <div class="dtitle">${esc(i.title)}</div>
+      <div class="dbody">${esc(i.body) || '（还没有正文，状态：'+esc(i.status)+'）'}</div>
+      <div class="tags">${(i.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>
+      <div class="dstats"><span>♡ ${i.likes} 赞</span><span>☆ ${i.collects} 藏</span><span>☰ ${i.comments} 评</span></div>
+      <div class="dmeta">
+        <div class="r"><b>状态</b><span>${esc(i.status)}</span></div>
+        <div class="r"><b>类型</b><span>${esc(i.type)} · ${i.score||'-'} 分</span></div>
+        <div class="r"><b>素材</b><span>${i.material_ready?'已到位':'未到位'}</span></div>
+        ${i.note?`<div class="r"><b>备注</b><span>${esc(i.note)}</span></div>`:''}
+      </div>
+      <button class="copy" onclick="copyBody()">复制正文</button>
+    </div>`;
+  document.getElementById('mask').classList.add('on');
+}
+function closeD(){document.getElementById('mask').classList.remove('on')}
+document.getElementById('mask').onclick=e=>{if(e.target.id==='mask')closeD()};
+function copyBody(){const t=document.querySelector('.dbody').innerText;navigator.clipboard.writeText(t)}
+function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+document.getElementById('q').oninput=e=>{kw=e.target.value;render()};
+</script>
+</body>
+</html>
