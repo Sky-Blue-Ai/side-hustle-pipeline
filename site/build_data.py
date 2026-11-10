@@ -65,8 +65,15 @@ def main():
         img = None
         src = find_cover(rec["标题"])
         if src:
-            name = f"cover_{rid}.png"
-            shutil.copy(src, os.path.join(outdir, name))
+            name = f"cover_{rid}.jpg"
+            dst = os.path.join(outdir, name)
+            try:
+                from PIL import Image
+                im = Image.open(src).convert("RGB")
+                im = im.resize((1242, 1656), Image.LANCZOS)
+                im.save(dst, "JPEG", quality=88, optimize=True, progressive=True)
+            except Exception:
+                shutil.copy(src, dst)
             img = f"covers/{name}"
         items.append({
             "id": rid,
