@@ -165,6 +165,7 @@ def build(name, data: dict) -> str:
 
 def render(name, data, out_path: Path) -> Path:
     chrome = find_chrome()
+    out_path = Path(out_path).expanduser().resolve()  # 相对路径会让 as_uri() 报错
     out_path.parent.mkdir(parents=True, exist_ok=True)
     tmp_html = out_path.parent / f".{out_path.stem}.html"
     tmp_html.write_text(build(name, data), encoding="utf-8")
