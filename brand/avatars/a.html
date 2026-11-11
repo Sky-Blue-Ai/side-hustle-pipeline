@@ -1,0 +1,18 @@
+<!doctype html>
+<!-- 方案 A：网格 + 高亮勾（多维表格的抽象，缩到 48px 也能认） -->
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:800px;height:800px;background:#12100E;display:flex;align-items:center;justify-content:center;font-family:"Noto Sans SC",sans-serif}
+  .grid{display:flex;flex-wrap:wrap;width:456px;gap:36px}
+  .cell{width:128px;height:128px;border-radius:30px;background:#2A2620;display:flex;align-items:center;justify-content:center}
+  .cell.on{background:#F0B429}
+  svg{width:86px;height:86px}
+</style></head><body>
+  <div class="grid">
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+    <div class="cell"></div>
+    <div class="cell on"><svg viewBox="0 0 100 100"><path d="M22 52 L42 72 L78 30" stroke="#12100E" stroke-width="13" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="cell"></div>
+    <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+  </div>
+</body></html>
