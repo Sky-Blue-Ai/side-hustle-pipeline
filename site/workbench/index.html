@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>副业工作台</title>
+<style>
+:root{--bg:#0E1116;--card:#161B22;--line:#232A35;--ink:#E6EDF3;--muted:#8B949E;--blue:#58A6FF;--ok:#3FB950;--warn:#F0883E;--bad:#F85149}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"Noto Sans SC","PingFang SC",sans-serif;-webkit-font-smoothing:antialiased;padding:26px 20px 60px}
+.wrap{max-width:1240px;margin:0 auto}
+header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+h1{font-size:22px;font-weight:800;letter-spacing:.3px}
+.sub{font-size:12px;color:var(--muted)}
+.dot-live{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block;margin-right:6px;box-shadow:0 0 0 3px rgba(63,185,80,.15)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;display:flex;flex-direction:column;min-height:250px}
+.ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.ct{font-size:14px;font-weight:700;letter-spacing:.2px}
+.cm{font-size:12px;color:var(--muted)}
+.row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid rgba(35,42,53,.7);font-size:13px;line-height:1.45}
+.row:last-child{border-bottom:0}
+.row .t{flex:1;overflow:hidden;text-overflow:ellipsis}
+.row .r{font-size:11px;color:var(--muted);white-space:nowrap}
+.tag{font-size:10px;padding:2px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.tag.hi{border-color:rgba(248,81,73,.4);color:var(--bad)}
+.tag.mid{border-color:rgba(240,136,62,.4);color:var(--warn)}
+.tag.lo{border-color:rgba(88,166,255,.35);color:var(--blue)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chip{background:#1C2330;border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-size:12px;color:var(--muted)}
+.chip b{color:var(--ink);font-size:15px;margin-left:6px}
+.chip.hot{border-color:rgba(240,136,62,.45);background:rgba(240,136,62,.08)}
+.chip.hot b{color:var(--warn)}
+.pname{font-weight:600}
+.pbar{height:4px;border-radius:3px;background:#1C2330;margin-top:6px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--blue)}
+.st{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px}
+.st.ok{background:var(--ok)}.st.bad{background:var(--bad)}.st.warn{background:var(--warn)}.st.off{background:#4B5563}
+.empty{color:var(--muted);font-size:13px;padding:18px 0;text-align:center}
+footer{margin-top:22px;font-size:11px;color:#5A6572;display:flex;gap:14px;flex-wrap:wrap}
+a{color:var(--blue);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>副业工作台</h1>
+    <span class="sub"><span class="dot-live"></span><span id="today"></span></span>
+    <span class="sub" id="gen" style="margin-left:auto"></span>
+  </header>
+
+  <div class="grid">
+    <!-- 待办 -->
+    <section class="card">
+      <div class="ch"><div class="ct">今日待办</div><div class="cm" id="todo-sum"></div></div>
+      <div class="chips" id="todo-chips"></div>
+      <div id="todo-list"></div>
+    </section>
+
+    <!-- 内容 -->
+    <section class="card">
+      <div class="ch"><div class="ct">内容流水线</div><div class="cm" id="c-sum"></div></div>
+      <div class="chips" id="c-chips"></div>
+      <div id="c-list"></div>
+    </section>
+
+    <!-- 项目 -->
+    <section class="card">
+      <div class="ch"><div class="ct">项目健康</div><div class="cm">按停更天数排序</div></div>
+      <div id="p-list"></div>
+    </section>
+
+    <!-- 定时任务 -->
+    <section class="card">
+      <div class="ch"><div class="ct">定时任务</div><div class="cm">失败排前面</div></div>
+      <div id="j-list"></div>
+    </section>
+  </div>
+
+  <footer>
+    <span>数据来源：飞书多维表格 · git 仓库 · cron</span>
+    <span>重新生成：<code>python3 site/workbench/build.py</code></span>
+    <span><a href="../">内容管理台 →</a></span>
+  </footer>
+</div>
+
+<script>
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+fetch('data.json', {cache:'no-store'}).then(r=>r.json()).then(render);
+
+function render(d){
+  document.getElementById('today').textContent = d.today;
+  document.getElementById('gen').textContent = '生成于 ' + d.generated_at;
+
+  // 待办
+  const ts = d.todos || [];
+  const over = ts.filter(t=>t.days!==null && t.days<0);
+  const today = ts.filter(t=>t.days===0);
+  const soon = ts.filter(t=>t.days!==null && t.days>0);
+  const none = ts.filter(t=>t.days===null);
+  document.getElementById('todo-sum').textContent = `共 ${ts.length} 条未完成`;
+  document.getElementById('todo-chips').innerHTML =
+    `<div class="chip ${over.length?'hot':''}">逾期<b>${over.length}</b></div>`+
+    `<div class="chip">今天<b>${today.length}</b></div>`+
+    `<div class="chip">未来<b>${soon.length}</b></div>`+
+    `<div class="chip">无日期<b>${none.length}</b></div>`;
+  const list = [...over, ...today, ...soon, ...none].slice(0,8);
+  document.getElementById('todo-list').innerHTML = list.length ? list.map(t=>{
+    const bad = t.days!==null && t.days<0;
+    const due = t.days===null ? '无日期' : bad ? `逾期 ${-t.days} 天` : t.days===0 ? '今天' : `${t.days} 天后`;
+    return `<div class="row"><span class="tag ${t.prio==='高'?'hi':t.prio==='中'?'mid':'lo'}">${esc(t.prio||'-')}</span>
+      <span class="t">${esc(t.title)}</span><span class="r" style="${bad?'color:var(--bad)':''}">${due}</span></div>`;
+  }).join('') : '<div class="empty">没有未完成的事</div>';
+
+  // 内容
+  const c = d.content || {counts:{},focus:[],total:0,ready:0};
+  document.getElementById('c-sum').textContent = `池子 ${c.total} 条 · 素材到位 ${c.ready}`;
+  document.getElementById('c-chips').innerHTML = ['待发','待做图','待写','选题','已发'].map(k=>
+    `<div class="chip ${k==='待发'&&c.counts[k]?'hot':''}">${k}<b>${c.counts[k]||0}</b></div>`).join('');
+  document.getElementById('c-list').innerHTML = (c.focus||[]).length ? c.focus.map(i=>
+    `<div class="row"><span class="tag lo">${esc(i.status)}</span><span class="t">${esc(i.title)}</span>
+     <span class="r">${i.score?i.score+'分':''}</span></div>`).join('')
+    : '<div class="empty">没有卡在手上的内容</div>';
+
+  // 项目
+  const ps = d.projects || [];
+  document.getElementById('p-list').innerHTML = ps.length ? ps.map(p=>{
+    const w = Math.min(100, p.days*6);
+    const color = p.days>=7 ? 'var(--bad)' : p.days>=3 ? 'var(--warn)' : 'var(--ok)';
+    return `<div class="row" style="flex-direction:column;gap:4px">
+      <div style="display:flex;width:100%;gap:8px;align-items:baseline">
+        <span class="pname">${esc(p.name)}</span>
+        <span class="r" style="color:${color}">${p.days===0?'今天有提交':p.days+' 天未提交'}</span>
+        ${p.dirty?`<span class="tag mid">未提交 ${p.dirty}</span>`:''}
+      </div>
+      <div class="cm" style="font-size:11px">${esc(p.subject)}</div>
+      <div class="pbar"><i style="width:${w}%;background:${color}"></i></div>
+    </div>`;
+  }).join('') : '<div class="empty">没有仓库</div>';
+
+  // 任务
+  const js = d.jobs || [];
+  document.getElementById('j-list').innerHTML = js.length ? js.map(j=>{
+    const ok = j.last==='ok', failed = j.last==='error'||j.last==='failed'||j.last==='delivery_failed';
+    const cls = !j.enabled ? 'off' : failed ? 'bad' : ok ? 'ok' : 'warn';
+    const txt = !j.enabled ? '已停用' : failed ? '失败' : ok ? '正常' : (j.last||'未跑');
+    return `<div class="row"><span class="st ${cls}"></span>
+      <span class="t">${esc(j.name)}<span class="cm" style="display:block;font-size:11px">${esc(j.schedule||'')}</span></span>
+      <span class="r" style="color:${failed?'var(--bad)':ok?'var(--ok)':'var(--muted)'}">${txt}</span></div>`;
+  }).join('') : '<div class="empty">没有定时任务</div>';
+}
+</script>
+</body>
+</html>

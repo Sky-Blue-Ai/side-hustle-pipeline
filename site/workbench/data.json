@@ -1,0 +1,156 @@
+{
+ "generated_at": "2026-11-14 16:19",
+ "today": "2026-11-14",
+ "todos": [
+  {
+   "title": "回家找绞肉机盖子",
+   "status": "待办",
+   "prio": "中",
+   "due": "2026-11-09",
+   "tags": [
+    "生活"
+   ],
+   "days": -5
+  },
+  {
+   "title": "找另一台绞肉机的刀片",
+   "status": "待办",
+   "prio": "中",
+   "due": "2026-11-09",
+   "tags": [
+    "生活"
+   ],
+   "days": -5
+  },
+  {
+   "title": "带小孩去打疫苗",
+   "status": "待办",
+   "prio": "中",
+   "due": "2026-11-14",
+   "tags": [
+    "生活"
+   ],
+   "days": 0
+  },
+  {
+   "title": "本人打乙肝疫苗",
+   "status": "待办",
+   "prio": "中",
+   "due": "2026-11-14",
+   "tags": [
+    "生活"
+   ],
+   "days": 0
+  }
+ ],
+ "content": {
+  "counts": {
+   "待发": 4,
+   "待做图": 0,
+   "待写": 0,
+   "选题": 17,
+   "已发": 0,
+   "复盘": 0
+  },
+  "total": 21,
+  "focus": [
+   {
+    "title": "我把每日提醒关了，改成只在到期前一天响一次",
+    "status": "待发",
+    "type": "引流",
+    "score": 5,
+    "plan": "2026-11-11",
+    "ready": true,
+    "likes": 0
+   },
+   {
+    "title": "3个设置让审批不再卡在领导那",
+    "status": "待发",
+    "type": "引流",
+    "score": 4,
+    "plan": "2026-11-14",
+    "ready": false,
+    "likes": 0
+   },
+   {
+    "title": "多维表格里90%的人不知道的5个自动化",
+    "status": "待发",
+    "type": "引流",
+    "score": 4,
+    "plan": "2026-11-12",
+    "ready": false,
+    "likes": 0
+   },
+   {
+    "title": "一个人管30个项目是怎么做到的",
+    "status": "待发",
+    "type": "人设",
+    "score": 4,
+    "plan": "2026-11-13",
+    "ready": false,
+    "likes": 0
+   }
+  ],
+  "ready": 1
+ },
+ "projects": [
+  {
+   "name": "personal-album-platform",
+   "date": "2026-11-08",
+   "days": 6,
+   "subject": "feat(web): 顶部导航 tab 化 + 返回上一页按钮",
+   "dirty": 0
+  },
+  {
+   "name": "sidehustle-pipeline",
+   "date": "2026-11-11",
+   "days": 3,
+   "subject": "feat: 附件重命名脚本（01-result/02-list/03-compare 可读名）",
+   "dirty": 1
+  },
+  {
+   "name": "history-river",
+   "date": "2026-11-14",
+   "days": 0,
+   "subject": "国内补齐：新增 55 条（近代 17 + 现代 17 + 古代 21），事件 270 → 325",
+   "dirty": 0
+  }
+ ],
+ "jobs": [
+  {
+   "name": "history-river 内容自循环",
+   "schedule": "every day at 10am",
+   "enabled": false,
+   "last": "",
+   "next": "2026-11-10 10:00"
+  },
+  {
+   "name": "history-river 十轮补内容",
+   "schedule": "every 40m",
+   "enabled": false,
+   "last": "delivery_failed",
+   "next": ""
+  },
+  {
+   "name": "history-river 朝代大事十轮",
+   "schedule": "every 40m",
+   "enabled": false,
+   "last": "error",
+   "next": "2026-11-12 22:40"
+  },
+  {
+   "name": "内容周复盘",
+   "schedule": "every sunday 8pm",
+   "enabled": true,
+   "last": "ok",
+   "next": "2026-11-15 20:00"
+  },
+  {
+   "name": "待办·前一天提醒",
+   "schedule": "0 20 * * *",
+   "enabled": true,
+   "last": "error",
+   "next": "2026-11-14 20:00"
+  }
+ ]
+}
