@@ -8,7 +8,7 @@ window.DEMO = [
     points: ["出差三天不用托人", "定时定量不撑胃", "手机远程加餐"],
     platform: "小红书",
     angle: "痛点型（怕猫饿着）",
-    cover: "covers/pet.png",
+    cover: "covers/pet.jpg",
     titles: [
       "出差三天，猫没饿着：4L 自动喂食器实测",
       "我把喂食器换成了带摄像头的那款",
@@ -26,7 +26,7 @@ window.DEMO = [
     points: ["158 不拖地", "腰后 3cm 可调", "机洗不变形"],
     platform: "小红书",
     angle: "测评型（穿了两个月）",
-    cover: "covers/dress.png",
+    cover: "covers/dress.jpg",
     titles: [
       "158 穿西装裤，终于不拖地了",
       "我把公司那条工装裤退了，换成这条",
@@ -44,7 +44,7 @@ window.DEMO = [
     points: ["199 搞定整个台面", "不打孔不伤墙", "退租能全拆走"],
     platform: "小红书",
     angle: "场景型（出租房厨房）",
-    cover: "covers/home.png",
+    cover: "covers/home.jpg",
     titles: [
       "房东的旧厨房，我花 199 救回来了",
       "租房最值得买的三件，都不打孔",
