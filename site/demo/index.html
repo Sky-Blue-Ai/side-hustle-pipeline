@@ -14,7 +14,11 @@ header{padding:18px 18px 12px;background:#fff;border-bottom:1px solid var(--line
 .title{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:800;letter-spacing:.2px}
 .badge{font-size:10px;font-weight:700;color:#fff;background:var(--ink);padding:3px 7px;border-radius:5px;letter-spacing:.5px}
 .sub{font-size:12px;color:var(--muted);margin-top:5px}
-.tabs{display:flex;gap:6px;margin-top:14px}
+.who{display:flex;gap:6px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.who span{font-size:11px;color:var(--muted);margin-right:2px}
+.who button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;font-size:12px;color:#555;cursor:pointer}
+.who button.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+.tabs{display:flex;gap:6px;margin-top:10px}
 .tab{flex:1;text-align:center;padding:9px 0;font-size:13px;font-weight:600;color:#666;background:#F2F2F4;border-radius:10px;cursor:pointer;transition:.18s;border:1px solid transparent}
 .tab.on{background:var(--ink);color:#fff}
 .tab i{display:inline-block;width:16px;height:16px;line-height:16px;border-radius:50%;background:rgba(0,0,0,.08);font-style:normal;font-size:10px;font-weight:800;margin-right:4px}
@@ -33,7 +37,6 @@ header{padding:18px 18px 12px;background:#fff;border-bottom:1px solid var(--line
 .btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;font-size:15px;font-weight:700;color:#fff;background:var(--ink);cursor:pointer;margin-top:4px}
 .btn:active{transform:scale(.99)}
 .btn.red{background:var(--red)}
-.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
 .btn[disabled]{opacity:.5;cursor:default}
 .steps{font-size:12px;color:var(--muted);margin-top:10px;min-height:18px}
 .steps div{opacity:0;animation:app .25s forwards}
@@ -45,7 +48,7 @@ h3 em{font-style:normal;color:var(--red)}
 .cover{width:100%;border-radius:12px;display:block;background:#EEE;aspect-ratio:3/4;object-fit:cover}
 .cover-row{display:flex;gap:12px;align-items:flex-start}
 .cover-row .cover{width:104px;flex:0 0 104px}
-.titles li{font-size:14px;padding:9px 0 9px 24px;border-bottom:1px solid var(--line);position:relative;list-style:none}
+.titles li{font-size:14px;padding:9px 0 9px 26px;border-bottom:1px solid var(--line);position:relative;list-style:none}
 .titles li:last-child{border:0}
 .titles li:before{content:"标题";position:absolute;left:0;top:11px;font-size:9px;font-weight:800;color:#fff;background:#C9C9CE;border-radius:3px;padding:1px 3px}
 .titles li.pick:before{background:var(--red)}
@@ -72,6 +75,7 @@ footer .btn{width:auto;flex:0 0 128px;margin:0;padding:12px;font-size:13px}
   <header>
     <div class="title">内容流水线 <span class="badge">演示</span></div>
     <div class="sub">填一行商品 → 出稿 → 自动排期。点按钮走一遍真实流程。</div>
+    <div class="who" id="who"><span>看哪个行业：</span></div>
     <div class="tabs">
       <div class="tab on" data-go="1"><i>1</i>填表</div>
       <div class="tab" data-go="2"><i>2</i>出稿</div>
@@ -79,54 +83,35 @@ footer .btn{width:auto;flex:0 0 128px;margin:0;padding:12px;font-size:13px}
     </div>
   </header>
 
-  <!-- 1 填表 -->
   <section class="screen on" id="s1">
     <p class="screen-hint">客户只做一件事：在飞书表格里填一行。</p>
     <div class="card">
       <div class="label">内容表 · 第 8 行</div>
-      <div class="row"><b>商品</b><span>宠物自动喂食器 4L</span></div>
-      <div class="row"><b>卖点</b><span>
-        <span class="chip">出差三天不用托人</span><span class="chip">定时定量不撑胃</span><span class="chip">手机远程加餐</span>
-      </span></div>
-      <div class="row"><b>平台</b><span>小红书</span></div>
-      <div class="row"><b>角度</b><span>痛点型（怕猫饿着）</span></div>
+      <div class="row"><b>商品</b><span id="f-product"></span></div>
+      <div class="row"><b>卖点</b><span id="f-points"></span></div>
+      <div class="row"><b>平台</b><span id="f-platform"></span></div>
+      <div class="row"><b>角度</b><span id="f-angle"></span></div>
       <div class="row"><b>状态</b><span style="color:var(--red);font-weight:700">待生成</span></div>
     </div>
     <button class="btn red" id="gen">生成这一条</button>
     <div class="steps" id="steps"></div>
   </section>
 
-  <!-- 2 出稿 -->
   <section class="screen" id="s2">
     <p class="screen-hint">这些不是模板填空，是按卖点重新拆的角度。</p>
     <div class="card">
       <div class="label">3 个标题 · 选一个</div>
-      <ul class="titles" id="titles">
-        <li class="pick">出差三天，猫没饿着：4L 自动喂食器实测</li>
-        <li>我把喂食器换成了带摄像头的那款</li>
-        <li>新手养猫第一件该买的，不是猫砂盆</li>
-      </ul>
+      <ul class="titles" id="titles"></ul>
     </div>
     <div class="card">
-      <div class="label">正文 · 286 字</div>
-      <div class="body">上个月连着出差两次，最怕的不是行李没收拾，是猫在家饿着。
-
-试了三个方案：托朋友上门（欠人情）、放一大盆猫粮（它吃到撑吐）、最后买了 4L 的自动喂食器。
-
-三周用下来，只有三点是我真觉得值的：
-· 定时定量，一次 12g，不会一口气吃光
-· 手机能远程加餐，飞机延误也不慌
-· 粮桶是密封的，猫粮没返潮
-
-缺点也说：出粮声音不小，夜里设了 10 点那次会把猫吵醒。
-
-出差多的养猫人，这个比自动猫砂盆实用。</div>
+      <div class="label" id="body-label">正文</div>
+      <div class="body" id="body"></div>
     </div>
     <div class="card">
       <div class="label">标签 + 封面</div>
-      <div style="margin-bottom:12px"><span class="chip red">#养猫日常</span><span class="chip">#自动喂食器</span><span class="chip">#出差养猫</span><span class="chip">#新手养猫</span></div>
+      <div style="margin-bottom:12px" id="tags"></div>
       <div class="cover-row">
-        <img class="cover" id="coverimg" alt="封面" src="cover.png">
+        <img class="cover" id="coverimg" alt="封面" src="covers/pet.png">
         <div>
           <h3>封面标题<em>自动配</em></h3>
           <p style="font-size:12px;color:var(--muted);line-height:1.6">按内容类型选版式：有数字走数据版，有清单走列表版，有前后对比走对比版。三个尺寸一次出齐。</p>
@@ -136,7 +121,6 @@ footer .btn{width:auto;flex:0 0 128px;margin:0;padding:12px;font-size:13px}
     <button class="btn" id="adopt">采用这条 → 进排期</button>
   </section>
 
-  <!-- 3 排期 -->
   <section class="screen" id="s3">
     <p class="screen-hint">排期不用记，表里自动排，到点提醒。</p>
     <div class="card">
@@ -157,8 +141,8 @@ footer .btn{width:auto;flex:0 0 128px;margin:0;padding:12px;font-size:13px}
       </div>
     </div>
     <div class="card">
-      <div class="label">待发 · 周四 20:00</div>
-      <div style="font-size:14px;font-weight:700;margin-bottom:6px">出差三天，猫没饿着：4L 自动喂食器实测</div>
+      <div class="label" id="plan-label">待发</div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:6px" id="plan-title"></div>
       <div style="font-size:12px;color:var(--muted)">已出稿 · 封面 1 张 · 发布前提醒已开</div>
     </div>
     <div class="card" style="background:#141414;color:#fff">
@@ -174,26 +158,59 @@ footer .btn{width:auto;flex:0 0 128px;margin:0;padding:12px;font-size:13px}
   </footer>
 </div>
 
+<script src="demo-data.js"></script>
 <script>
-const tabs=[...document.querySelectorAll('.tab')];
-const screens={1:document.getElementById('s1'),2:document.getElementById('s2'),3:document.getElementById('s3')};
-function go(n){
-  tabs.forEach(t=>t.classList.toggle('on',t.dataset.go==String(n)));
-  Object.entries(screens).forEach(([k,el])=>el.classList.toggle('on',k==String(n)));
-  window.scrollTo({top:0,behavior:'smooth'});
+const D = window.DEMO || [];
+let cur = 0;
+const $ = s => document.querySelector(s);
+
+D.forEach((p, i) => {
+  const b = document.createElement('button');
+  b.textContent = p.name;
+  b.className = i === 0 ? 'on' : '';
+  b.onclick = () => {
+    cur = i;
+    document.querySelectorAll('#who button').forEach((x, j) => x.classList.toggle('on', j === i));
+    paint(); go(1);
+  };
+  $('#who').appendChild(b);
+});
+
+function paint() {
+  const p = D[cur];
+  $('#f-product').textContent = p.product;
+  $('#f-points').innerHTML = p.points.map(x => '<span class="chip">' + x + '</span>').join('');
+  $('#f-platform').textContent = p.platform;
+  $('#f-angle').textContent = p.angle;
+  $('#titles').innerHTML = p.titles.map((t, i) => '<li class="' + (i === 0 ? 'pick' : '') + '">' + t + '</li>').join('');
+  $('#body').textContent = p.body;
+  $('#body-label').textContent = '正文 · ' + p.body.replace(/\s/g, '').length + ' 字';
+  $('#tags').innerHTML = p.tags.map((t, i) => '<span class="chip' + (i === 0 ? ' red' : '') + '">' + t + '</span>').join('');
+  $('#coverimg').src = p.cover;
+  $('#plan-label').textContent = '待发 · ' + p.plan;
+  $('#plan-title').textContent = p.titles[0];
 }
-tabs.forEach(t=>t.onclick=()=>go(t.dataset.go));
-const steps=document.getElementById('steps'),gen=document.getElementById('gen');
-gen.onclick=()=>{
-  gen.disabled=true;gen.textContent='正在跑…';steps.innerHTML='';
-  const list=['抓取卖点 3 条','拆解 3 个内容角度','写标题 + 正文','配封面 1 张'];
-  list.forEach((s,i)=>setTimeout(()=>{
-    const d=document.createElement('div');d.textContent=s;steps.appendChild(d);
-  },300*(i+1)));
-  setTimeout(()=>{go(2);gen.disabled=false;gen.textContent='生成这一条';},300*list.length+700);
+
+const tabs = [...document.querySelectorAll('.tab')];
+const screens = {1: $('#s1'), 2: $('#s2'), 3: $('#s3')};
+function go(n) {
+  tabs.forEach(t => t.classList.toggle('on', t.dataset.go == String(n)));
+  Object.entries(screens).forEach(([k, el]) => el.classList.toggle('on', k == String(n)));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+tabs.forEach(t => t.onclick = () => go(t.dataset.go));
+
+const steps = $('#steps'), gen = $('#gen');
+gen.onclick = () => {
+  gen.disabled = true; gen.textContent = '正在跑…'; steps.innerHTML = '';
+  ['抓取卖点 3 条', '拆解 3 个内容角度', '写标题 + 正文', '配封面 1 张'].forEach((s, i) =>
+    setTimeout(() => { const d = document.createElement('div'); d.textContent = s; steps.appendChild(d); }, 300 * (i + 1)));
+  setTimeout(() => { go(2); gen.disabled = false; gen.textContent = '生成这一条'; }, 1900);
 };
-document.getElementById('adopt').onclick=()=>go(3);
-document.getElementById('again').onclick=()=>{steps.innerHTML='';go(1)};
+$('#adopt').onclick = () => go(3);
+$('#again').onclick = () => { steps.innerHTML = ''; go(1); };
+
+paint();
 </script>
 </body>
 </html>
