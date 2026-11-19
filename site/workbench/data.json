@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-11-14 16:19",
- "today": "2026-11-14",
+ "generated_at": "2026-11-19 12:29",
+ "today": "2026-11-19",
  "todos": [
   {
    "title": "回家找绞肉机盖子",
@@ -10,7 +10,7 @@
    "tags": [
     "生活"
    ],
-   "days": -5
+   "days": -10
   },
   {
    "title": "找另一台绞肉机的刀片",
@@ -20,7 +20,7 @@
    "tags": [
     "生活"
    ],
-   "days": -5
+   "days": -10
   },
   {
    "title": "带小孩去打疫苗",
@@ -30,7 +30,7 @@
    "tags": [
     "生活"
    ],
-   "days": 0
+   "days": -5
   },
   {
    "title": "本人打乙肝疫苗",
@@ -40,7 +40,7 @@
    "tags": [
     "生活"
    ],
-   "days": 0
+   "days": -5
   }
  ],
  "content": {
@@ -97,22 +97,50 @@
   {
    "name": "personal-album-platform",
    "date": "2026-11-08",
-   "days": 6,
+   "days": 11,
    "subject": "feat(web): 顶部导航 tab 化 + 返回上一页按钮",
    "dirty": 0
   },
   {
-   "name": "sidehustle-pipeline",
-   "date": "2026-11-11",
+   "name": "hermes-hub",
+   "date": "2026-11-16",
    "days": 3,
-   "subject": "feat: 附件重命名脚本（01-result/02-list/03-compare 可读名）",
+   "subject": "refactor: 「Agent」改称「角色」，明示 1 个 Hermes 实例的 4 种分工",
+   "dirty": 0
+  },
+  {
+   "name": "sidehustle-pipeline",
+   "date": "2026-11-16",
+   "days": 3,
+   "subject": "perf: 演示封面转 828px JPEG（156KB→40KB），手机加载更快",
+   "dirty": 2
+  },
+  {
+   "name": "common-website",
+   "date": "2026-11-17",
+   "days": 2,
+   "subject": "feat(shelf): 新增读过 6 部（毕业/红手指/新参者/假面饭店/假面之夜/假面游戏），五维度拆解",
    "dirty": 1
   },
   {
+   "name": "cw",
+   "date": "2026-11-17",
+   "days": 2,
+   "subject": "feat(shelf): 新增读过 6 部（毕业/红手指/新参者/假面饭店/假面之夜/假面游戏），五维度拆解",
+   "dirty": 0
+  },
+  {
    "name": "history-river",
-   "date": "2026-11-14",
-   "days": 0,
-   "subject": "国内补齐：新增 55 条（近代 17 + 现代 17 + 古代 21），事件 270 → 325",
+   "date": "2026-11-17",
+   "days": 2,
+   "subject": "来源升级：30 条条目的维基来源全部换为一手源（识典正史 / OpenStax / 考古所 / 国家档案馆）",
+   "dirty": 0
+  },
+  {
+   "name": "pet-companion-ship",
+   "date": "2026-11-18",
+   "days": 1,
+   "subject": "feat(demo): 用真实引擎的可点 demo（投喂/玩耍/对话/成长/快进全走仓库代码）",
    "dirty": 0
   }
  ],
@@ -143,14 +171,43 @@
    "schedule": "every sunday 8pm",
    "enabled": true,
    "last": "ok",
-   "next": "2026-11-15 20:00"
+   "next": "2026-11-22 20:00"
   },
   {
    "name": "待办·前一天提醒",
    "schedule": "0 20 * * *",
    "enabled": true,
-   "last": "error",
-   "next": "2026-11-14 20:00"
+   "last": "ok",
+   "next": "2026-11-19 20:00"
   }
- ]
+ ],
+ "system": {
+  "mem_total_gb": 1.8,
+  "mem_used_gb": 1.4,
+  "mem_pct": 77,
+  "swap_pct": 35,
+  "swap_gb": 6.0,
+  "disk_total_gb": 39,
+  "disk_free_gb": 2,
+  "disk_pct": 90,
+  "load1": 0.87,
+  "load5": 1.09,
+  "load15": 1.06,
+  "cpus": 2,
+  "uptime_days": 138.0,
+  "top": [
+   {
+    "name": "hermes",
+    "mb": 185
+   },
+   {
+    "name": "next-server (v1",
+    "mb": 167
+   },
+   {
+    "name": "node-MainThread",
+    "mb": 150
+   }
+  ]
+ }
 }

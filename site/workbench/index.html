@@ -70,6 +70,12 @@ a{color:var(--blue);text-decoration:none}
       <div id="p-list"></div>
     </section>
 
+    <!-- 系统 -->
+    <section class="card">
+      <div class="ch"><div class="ct">本机状态</div><div class="cm" id="s-sum"></div></div>
+      <div id="s-body"></div>
+    </section>
+
     <!-- 定时任务 -->
     <section class="card">
       <div class="ch"><div class="ct">定时任务</div><div class="cm">失败排前面</div></div>
@@ -137,6 +143,29 @@ function render(d){
       <div class="pbar"><i style="width:${w}%;background:${color}"></i></div>
     </div>`;
   }).join('') : '<div class="empty">没有仓库</div>';
+
+  // 系统
+  const s = d.system || null;
+  if(s){
+    document.getElementById('s-sum').textContent = `负载 ${s.load1} / ${s.cpus} 核 · 运行 ${s.uptime_days} 天`;
+    const bar = (label, pct, note, warn) => {
+      const color = pct>=90 ? 'var(--bad)' : pct>=70 ? 'var(--warn)' : 'var(--ok)';
+      return `<div class="row" style="flex-direction:column;gap:5px">
+        <div style="display:flex;width:100%;gap:8px;align-items:baseline">
+          <span class="pname">${label}</span>
+          <span class="r" style="${warn?'color:'+color:''}">${pct}%</span>
+          <span class="r" style="margin-left:auto">${note}</span></div>
+        <div class="pbar"><i style="width:${pct}%;background:${color}"></i></div></div>`;
+    };
+    let html = bar('内存', s.mem_pct, `${s.mem_used_gb} / ${s.mem_total_gb} GB`);
+    if(s.swap_gb>0) html += bar('交换区', s.swap_pct, `${s.swap_gb} GB`);
+    html += bar('磁盘 /', s.disk_pct, `剩 ${s.disk_free_gb} / ${s.disk_total_gb} GB`);
+    if((s.top||[]).length){
+      html += `<div class="cm" style="margin-top:10px;font-size:11px">吃内存最多的进程</div>` +
+        s.top.map(t=>`<div class="row"><span class="t">${esc(t.name)}</span><span class="r">${t.mb} MB</span></div>`).join('');
+    }
+    document.getElementById('s-body').innerHTML = html;
+  }
 
   // 任务
   const js = d.jobs || [];

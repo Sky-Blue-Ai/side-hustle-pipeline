@@ -126,6 +126,51 @@ def jobs():
     return out
 
 
+def system():
+    """内存 / 磁盘 / 负载 / 运行时长 / 占用最高的进程"""
+    import shutil
+    info = {}
+    mem = {}
+    for line in open("/proc/meminfo"):
+        k, _, v = line.partition(":")
+        mem[k.strip()] = int(v.split()[0])  # kB
+    total = mem.get("MemTotal", 0)
+    avail = mem.get("MemAvailable", 0)
+    used = total - avail
+    info["mem_total_gb"] = round(total / 1048576, 1)
+    info["mem_used_gb"] = round(used / 1048576, 1)
+    info["mem_pct"] = round(used / total * 100) if total else 0
+    sw_total = mem.get("SwapTotal", 0)
+    sw_free = mem.get("SwapFree", 0)
+    info["swap_pct"] = round((sw_total - sw_free) / sw_total * 100) if sw_total else 0
+    info["swap_gb"] = round(sw_total / 1048576, 1)
+
+    du = shutil.disk_usage("/")
+    info["disk_total_gb"] = round(du.total / 1073741824)
+    info["disk_free_gb"] = round(du.free / 1073741824)
+    info["disk_pct"] = round(du.used / du.total * 100)
+
+    load = os.getloadavg()
+    info["load1"], info["load5"], info["load15"] = [round(x, 2) for x in load]
+    info["cpus"] = os.cpu_count()
+
+    with open("/proc/uptime") as f:
+        up = float(f.read().split()[0])
+    info["uptime_days"] = round(up / 86400, 1)
+
+    try:
+        ps = subprocess.run(["ps", "-eo", "rss,comm", "--sort=-rss"], capture_output=True, text=True, timeout=20).stdout
+        top = []
+        for line in ps.splitlines()[1:4]:
+            parts = line.split(None, 1)
+            if len(parts) == 2:
+                top.append({"name": parts[1].strip()[:24], "mb": round(int(parts[0]) / 1024)})
+        info["top"] = top
+    except Exception:
+        info["top"] = []
+    return info
+
+
 def main():
     data = {
         "generated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -134,6 +179,7 @@ def main():
         "content": contents(),
         "projects": projects(),
         "jobs": jobs(),
+        "system": system(),
     }
     json.dump(data, open(OUT, "w"), ensure_ascii=False, indent=1)
     print(f"待办 {len(data['todos'])} | 内容 {data['content']['total']} | 项目 {len(data['projects'])} | 任务 {len(data['jobs'])}")
